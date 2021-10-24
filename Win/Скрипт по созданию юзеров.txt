@@ -1,0 +1,7 @@
+
+for ($i;$i -le 30; $i++){
+    $name=("IT_" + "$i");
+	$pass=("Pa$$w0rd" + "$i");
+	New-ADUser -Name $name -Enabled $true -Path 'OU=IT,DC=ht2021, DC=local' -AccountPassword (ConvertTo-SecureString($pass) -AsPlainText -Force) -CannotChangePassword $true
+	Add-ADGroupMember -Identity "IT" -Members $name
+    }

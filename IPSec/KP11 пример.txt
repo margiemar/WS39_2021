@@ -1,0 +1,51 @@
+apt install libreswan
+Ctl-Z
+kill -9 %1
+conn mytunnel
+    auto=start
+    authby=secret
+    type=tunnel
+    ike=aes128-sha2;dh14
+    ikev2=no
+    phase2=esp
+    pfs=no
+    encapsulation=yes
+    leftsubnet=0.0.0.0/0
+    rightsubnet=0.0.0.0/0
+    left=<VPC_PUBLIC_IP>
+    right=%any
+    rightid=172.30.66.19
+    mark=5/0xffffffff
+    vti-interface=vti01
+    vti-routing=no
+    vti-shared=yes
+    leftvti=192.168.20.2/30
+Dmitry — 10/19/2021
+admin:Pa$$w0rd
+int 1 - ip address dhcp
+int 3 - ip address 172.30.1.253 255.255.255.0
+Dmitry — 10/19/2021
+TheSecretMustBeAtLeast13bytes
+crypto isakmp policy 1
+encr aes
+authentication pre-share
+hash sha256
+group 14
+!
+crypto isakmp key TheSecretMustBeAtLeast13bytes address <VPC_PUBLIC_IP>
+crypto isakmp nat keepalive 5
+!
+crypto ipsec transform-set TSET  esp-aes 256 esp-sha256-hmac
+mode tunnel
+!
+crypto ipsec profile VTI
+set transform-set TSET
+!
+interface Tunnel0
+ip address 192.168.20.1 255.255.255.252
+tunnel source GigabitEthernet 1
+tunnel destination <VPC_PUBLIC_IP>
+tunnel mode ipsec ipv4
+tunnel protection ipsec profile VTI
+no shut
+!

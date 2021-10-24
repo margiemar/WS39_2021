@@ -1,0 +1,144 @@
+admin/empty pass
+
+/system reboot
+/system shutdown
+Пользователи MikroTik
+По умолчанию для входа используется логин admin без пароля. Добавление пользователя:
+
+1
+use add name=имя password=пароль group=full
+Отключаемся чтобы зайти под новым пользователем:
+
+1
+quit
+Отключение пользователя:
+
+1
+user disable admin
+Просмотр пользователей:
+
+1
+user print
+ Интерфейсы MikroTik CLI
+Просмотр интерфейсов:
+
+1
+interface print
+Активация интерфейса:
+
+1
+interface enable 0
+Назначение интерфейсу IP адреса:
+
+1
+ip address add address 172.17.1.199/24 interface ether1
+Просмотр IP адресов:
+
+1
+ip address print
+Изменение MTU интерфейсов:
+
+1
+interface set 0,1,2 mtu=1500
+Изменение mac адреса интерфейса:
+
+1
+/interface ethernet set ether1 mac-address=00:01:02:03:04:05
+Сброс mac адреса интерфейса:
+
+1
+/interface ethernet reset-mac ether1
+Установка шлюза по умолчанию:
+
+1
+ip route add gateway=172.16.1.131
+Просмотр маршрутов:
+
+1
+ip route print
+Устанавливаем первичный и вторичный адреса DNS серверов:
+
+1
+ip dns set primary-dns=8.8.8.8 secondary-dns=8.8.4.4 allow-remote-requests=yes
+Просмотр DNS параметров:
+
+1
+ip dns print
+Беспроводные интерфейсы MikroTik
+Просмотр беспроводных интерфейсов:
+
+1
+/interface wireless print
+Установка времени в MikroTik CLI
+Установка часового пояса:
+
+1
+system clock set time-zone=+2
+Установка ip адреса ntp сервера с которым будет сверяться время:
+
+1
+system ntp client set enabled=yes primary-ntp=172.16.1.131
+Просмотр времени:
+
+1
+/system clock print
+Настройка Firewall MikroTik CLI
+Настройка маскарадинга, чтобы чтобы внутренняя сеть не была видна с WAN порта:
+
+1
+ip firewall nat add chain=srcnat action=masquerade out-interface=интерфейс провайдера
+Просмотр правил:
+
+1
+ip firewall filter print
+Пример ограничения количества соединений с одного IP:
+
+1
+/ip firewall rule forward add protocol=tcp tcp -options=syn-only connection-limit=5 action=drop
+Пример блокировки всех TCP пакетов идущих на порт 135:
+
+1
+/ip firewall rule forward add dst -port=135 protocol=tcp action=drop
+Пример проброса портов:
+
+1
+/ip firewall dst-nat add action=nat protocol=tcp dst-address=10.0.0.217/32:80 to-dst-address=192.168.0.4
+Системные настройки MikroTik и информация в консоли
+Просмотр стандартных настроек:
+
+1
+/system default-configuration print
+Сброс настроек:
+
+1
+/system reset-configuration
+Просмотр истории:
+
+1
+/system history print
+Службы MikroTik
+Просмотр служб:
+
+1
+/ip service print
+Прочая информация по коммандрой строке MikroTik CLI
+Переход на уровень выше:
+
+1
+/
+Выполнение команды из другого уровня без смены текущего:
+
+1
+ 
+Помощь:
+
+1
+?
+Настройка маршрутизатора с помощью мастера настроек:
+
+1
+setup
+Пинг:
+
+BGP
+https://wiki.mikrotik.com/wiki/Manual:Routing/BGP

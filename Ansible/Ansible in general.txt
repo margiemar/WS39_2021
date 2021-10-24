@@ -1,0 +1,156 @@
+osboxes / osboxes.org
+
+ansible <hosts> -a <command> = ansible all -a "/sbin/reboot"
+hosts: all, имя группы или ungrouped
+
+https://www.osboxes.org/centos/#centos-7-9-info
+
+Username: osboxes
+Password: osboxes.org
+
+ansible-doc -l | grep
+ansible-doc apt-repositiry
+
+**********
+ansible-playbook --user root -i host.ini playbook.yml 
+**********
+
+Поднять интерфейс на CentOS  по дефолту
+vi /etc/sysconfig/network-scripts/ifcfg-enp0s3
+ONBOOT=yes
+
+sudo shutdown -r
+
+ПЕРЕИМЕНОВАНИЕ
+sudo vi /etc/hostname
+sudo vi /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+заменить на 
+127.0.0.1   localhost ansiblecontroller
+::1         localhost ansiblecontroller
+sudo shutdown -r
+
+УСТАНОВКА ANSIBLE
+
+CENTOS
+
+https://docs.ansible.com/ansible/latest/installation_guide/index.html
+$ sudo yum install epel-release
+$ sudo yum install ansible
+
+sudo vi /etc/ansible/ansible.cfg
+host_key_checking = False
+
+project]$ cat inventory 
+target1 ansible_host=192.168.0.104  ansible_ssh_pass=osboxes.org
+
+UBUNTU
+
+sudo apt update
+sudo apt install software-properties-common
+sudo add-apt-repository --yes --update ppa:ansible/ansible
+sudo apt install ansible
+
+
+
+ansible-galaxy init docker
+
+ПРОВЕРКА
+ansible target1 -m ping -i inventory
+
+INVENTORY
+
+По дефолту берётся из /etc/ansible/hosts
+
+WINDOWS
+
+НА  LINUX-CONTROLLER для работы с windows
+sudo yum install python2-winrm
+inventory
+wintar1 ansible_host=192.168.0.105  ansible_ssh_pass=*** ansible_user=Administrator ansible_connection=winrm ansible_winrm_server_cert_validation=ignore
+
+НА WIN
+Powershell - $PSVersionTable - dir /windows/microsoft.net/framework/v*
+
+Windows Remote Management
+
+https://docs.ansible.com/ansible/latest/user_guide/windows_setup.html
+
+To use this script, run the following in PowerShell:
+
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
+$file = "$env:temp\ConfigureRemotingForAnsible.ps1"
+
+(New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
+
+powershell.exe -ExecutionPolicy ByPass -File $file
+
+Set-Item -Path WSMan:\localhost\Service\Auth\Basic -Value $true
+
+ПРОВЕРКА
+ansible wintar1 -m win_ping -i inventory
+
+КОМАНДЫ WIN
+Установка приложения
+ansible wintar1 -m win_chocolatey -i inventory -a "name=notepadplusplus state=present"
+
+Рандомная команда
+ansible wintar1 -i inventory -m win_shell -a "ping 8.8.8.8 chdir=C:\ executable=cmd"
+
+
+ansible-playbook playbook-ping.yml -i inventory
+---
+-  name: Test connection linux
+   hosts: linux
+   tasks:
+     - name: Ping test
+	   ping:
+	   
+КОМАНДЫ ДЛЯ LINUX
+
+INSTALL
+
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Install packages
+    apt:
+      name:
+      - ntpdate
+      - nmap
+      state: latest
+      cache_valid_time: 3600
+
+
+ECHO SHELL
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Echo the Date to a tmp file
+    shell: echo  "`date`"> /tmp/date
+  - name: Echo String to a tmp file
+    shell: echo  "Techexpert.tips is a greate website" > /tmp/techexpert
+	
+RAW
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Echo the Date to a tmp file
+    raw: ls -la /etc > /tmp/etc-files
+	
+Update and Upgrade Ubuntu Linux
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Updata and upgrade
+    apt:
+      upgrade: yes
+      update_cache: yes
+      cache_valid_time: 86400

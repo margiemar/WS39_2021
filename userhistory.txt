@@ -1,0 +1,327 @@
+    1  sudo -i
+    2  hostnamectl set-hostname DEV2
+    3  t-get installt install sssd-ad sssd-tools realmd adcli
+    4  apt install vim
+    5  sudo apt install vim
+    6  apt-get install sssd-ad sssd-tools realmd adcli
+    7  sudo apt-get install sssd-ad sssd-tools realmd adcli
+    8  apt install realmd
+    9  sudo apt install realmd
+   10  ip add
+   11  sudo i
+   12  sudo -i
+   13  history
+   14  vim /etc/systemd/timesyncd.conf
+   15  sudo -i
+   16  realm list
+   17  exit
+   18  logout
+   19  sudo -i
+   20  cd Downloads/
+   21  ls
+   22  sudo apt install code_1.61.0-1633631387_amd64.deb -y
+   23  ls
+   24  sudo apt install ./code_1.61.0-1633631387_amd64.deb -y
+   25  ping 172.30.1.31
+   26  ssh root@172.30.1.31
+   27  ssh-key (/home/user/,ssh/id_rsa):
+   28  ssh-keygen
+   29  ssh-copy-id root@172.30.1.31
+   30  ssh root@172.30.1.31
+   31  udo apt-get update
+   32  sudo apt-get update
+   33  sudo apt-get install     apt-transport-https     ca-certificates     curl     gnupg     lsb-release
+   34  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+   35  echo   "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+   36    $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   37  sudo apt-get update
+   38  sudo apt-get install docker-ce docker-ce-cli containerd.io
+   39  docker run hello-world
+   40  sudo docker run hello-world
+   41  docker ps
+   42  sudo docker ps
+   43  sudo usermod -aG docker ${USER}
+   44  docker ps
+   45  exit
+   46  exit
+   47  docker ps
+   48  sudo docker ps
+   49  sudo usermod -aG docker ${USER}
+   50  less /etc/group
+   51  sudo gpasswd -a user docker
+   52  id
+   53  newgrp docker
+   54  docker ps
+   55  sudo docker ps
+   56  ssh 172.30.1.32
+   57  ssh root@172.30.1.32
+   58  ip addr
+   59  ssh root@172.30.1.31
+   60  rm /home/user/.ssh/known_hosts
+   61  ssh root@172.30.1.31
+   62  ssh 172.30.1.32
+   63  ssh-copy-id root@172.30.1.31
+   64  ssh-copy-id root@172.30.1.32
+   65  sudo apt update
+   66  sudo apt install software-properties-common
+   67  sudo add-apt-repository --yes --update ppa:ansible/ansible
+   68  sudo apt install ansible
+   69  ansible -V
+   70  mkdir ansible
+   71  ansible-doc -l
+   72  jghbhbghbhnbnbnbnhhhhhhhhhhhhh
+   73  cd ansible/
+   74  ansible-playbook -i host.ini playbook.yml 
+   75  cat playbook.yml 
+   76  ansible-playbook -i host.ini playbook.yml 
+   77  ansible-playbook -i host.ini --user=root playbook.yml 
+   78  ansible-playbook -i host.ini --user=root playbook2.yml 
+   79  ansible-playbook -i host.ini --user=root play_debian.yml 
+   80  ansible-playbook -i host.ini --user=root playbook-centos.yml 
+   81  ansible-playbook -i host.ini --user=root play_debian.yml 
+   82  ansible-playbook -i host.ini --user=root playbook-centos.yml 
+   83  ansible-playbook -i host.ini --user=root playbook-vote.yml 
+   84  ansible-galaxy init docker
+   85  nmtui
+   86  ssh root@172.30.1.31
+   87  ssh 172.30.1.32
+   88  ssh root@172.30.1.32
+   89  nmtui
+   90  ip route get 8.8.8.8
+   91  systemctl disable --now firewalld
+   92  systemctl status firewalld
+   93  whereis curl
+   94  cat /etc/nsswitch.conf 
+   95  ls /etc/ssh/ssh_config
+   96  ip addr
+   97  mkdir hi-teck
+   98  mkdir hi-teck/teraform
+   99  mkdir teraform
+  100  cd teraform/
+  101  sudo apt-get update
+  102  sudo apt-get install -y gnupg software-properties-common curl
+  103  curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+  104  sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+  105  sudo apt-get update
+  106  sudo apt-get install terraform
+  107  terraform -install-autocomplete
+  108  teraform
+  109  ssh root@172.30.1.31
+  110  nmtui
+  111  ssh root@172.30.1.32
+  112  teraform
+  113  history
+  114  source /home/user/.bashrc
+  115  teraform 
+  116  ls
+  117  mv teraform/ terraform
+  118  terraform 
+  119  cd terraform/
+  120  ls
+  121  cd learn/
+  122  ls
+  123  terraform init
+  124  ls -ls
+  125  ls -la
+  126  terraform plan
+  127  terraform apply 
+  128  cd
+  129  ls
+  130  cat test.txt 
+  131  terraform init
+  132  cd terraform/learn/
+  133  terraform init
+  134  terraform plan 
+  135  terraform apply 
+  136  ls
+  137  terraform plan 
+  138  terraform apply 
+  139  terraform plan 
+  140  terraform validate 
+  141  terraform show 
+  142  terraform graf
+  143  terraform graph
+  144  sudo apt install graphviz -y
+  145* terraform graph  | dot -T
+  146  terraform graph | dot -Tsvg > graph.svg
+  147  terraform plan
+  148  terraform apply 
+  149  terraform plan
+  150  terraform apply 
+  151  terraform plan 
+  152  terraform apply 
+  153  ls
+  154  rm vcsa
+  155  rmdir vcsa
+  156  cd 
+  157  cd terraform/
+  158  mkdir vcsa
+  159  cd vcsa/
+  160  terraform init
+  161  export TF_VAR_vsphere_password = "Pa$$w0rd"
+  162  export TF_VAR_vsphere_password="Pa$$w0rd"
+  163  terraform plan
+  164  terraform init
+  165  terraform plan
+  166  export TF_VAR_vsphere_password='Pa$$w0rd'
+  167  terraform plan
+  168  terraform apply
+  169  terraform show 
+  170  ls
+  171  terraform apply 
+  172  terraform show
+  173  terraform plan
+  174  terraform apply 
+  175  terraform validate 
+  176  terraform apply 
+  177  terraform validate 
+  178  terraform apply
+  179  sudo apt install clustershell -y
+  180  vim  /etc/clustershell/groups.d/local.cfg 
+  181  sudo vim  /etc/clustershell/groups.d/local.cfg 
+  182  sudo -s
+  183  cd 
+  184  ls
+  185  cd hi-teck/
+  186  ls
+  187  mkdir kubernetes
+  188  cd
+  189  mv hi-teck/ hi-tech
+  190  cd hi-tech/
+  191  cd kubernetes/
+  192  kubectl get nodes
+  193  cd
+  194  kubectl get nodes
+  195  curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.22.0/bin/linux/amd64/kubectl
+  196  chmod +x ./kubectl
+  197  sudo mv ./kubectl /usr/local/bin/kubectl
+  198  kubectl get nodes
+  199  sudo kubectl get nodes
+  200  sudo -s
+  201  source /etc/bash_completion.d/kubectl
+  202  ls
+  203  ls -ls
+  204  cd hi-tech/
+  205  ls
+  206  ls teraform/
+  207  rm teraform/
+  208  rmdir teraform/
+  209  cd
+  210  mkdir kubernetes
+  211  ls
+  212  cd kubernetes/
+  213  ls
+  214  kubectl apply -f pod.yml 
+  215  sudo kubectl apply -f pod.yml 
+  216  kubectl get pods
+  217  sudo kubectl get pods
+  218  sudo kubectl describe pod.yml 
+  219  sudo kubectl describe mynginx
+  220  sudo kubectl describe pod
+  221  sudo kubectl logs mynginx
+  222  kubectl get pods -owide
+  223  kubectl get pod -owide
+  224  sudo kubectl get pod -owide
+  225  sudo kubectl delete -f ./pod.yml 
+  226  sudo -i 
+  227  kubectl apply pod.yml 
+  228  kubectl apply -f  pod.yml 
+  229  sudo kubectl apply -f  pod.yml 
+  230  sudo kubectl get pod -owide
+  231  sudo kubectl exec -it mynginx --bash
+  232  kubectl exec -it mynginx -- bash
+  233  sudo kubectl exec -it mynginx -- bash
+  234  sudo kubectl get --all
+  235  sudo kubectl get all
+  236  sudo kubectl apply -f  pod.yml 
+  237  l
+  238  sudo kubectl apply -f  pod.yml 
+  239  kubectl get pods
+  240  sudo kubectl get pods
+  241  sudo kubectl delete mynginx
+  242  sudo kubectl delete pods mynginx
+  243  sudo kubectl apply -f  pod.yml 
+  244  sudo kubectl get pods
+  245  sudo kubectl delete mynginx
+  246  sudo kubectl delete pod mynginx
+  247  sudo kubectl get all
+  248  ls
+  249  sudo kubectl apply -f deployment.yml 
+  250  sudo kubectl get pod
+  251  sudo kubectl delete deploy
+  252  sudo kubectl delete deploy mynginx
+  253  sudo kubectl apply -f whoami.yml 
+  254  sudo kubectl get pod
+  255  sudo kubectl get pod -owide
+  256  sudo kubectl restart pod whoami-b885f644f-j5ncj
+  257  sudo kubectl apply -f service.yml 
+  258  sudo kubectl get pod -owide
+  259  sudo kubectl get service.yml 
+  260  sudo kubectl get svc
+  261  sudo kubectl delete svc who
+  262  sudo kubectl delete svc whoami-svc
+  263  ls
+  264  sudo kubectl apply -f service-np.yml 
+  265  sudo kubectl get service
+  266  sudo kubectl get pod -owide
+  267  sudo clush -g all yum install -y nfs-utils
+  268  sudo systemctl get all
+  269  sudo systemctl get --all
+  270  sudo kubectl  get --all
+  271  sudo kubectl  get all
+  272  sudo kubectl delete deploy whoami
+  273  sudo kubectl delete service whoami-svc
+  274  sudo kubectl  get all
+  275  cd 
+  276  ls -ls
+  277  ls vote-app/
+  278  ls dockertest/
+  279  ls hi-tech/
+  280  cd kubernetes/
+  281  ll
+  282  sudo kubectl apply -f pv-redis.yml 
+  283  ls
+  284  cd
+  285  sudo kubectl apply -f ./kubernetes/
+  286  cd kubernetes/
+  287  kubectl get all
+  288  sudo kubectl get all
+  289  ls
+  290  sudo kubectl apply -f pvc-redis.yml 
+  291  sudo kubectl apply -f pv-redis.yml 
+  292  sudo kubectl get all
+  293  sudo kubectl get pv
+  294  sudo kubectl get pvc
+  295  sudo kubectl get pods
+  296  sudo kubectl get all
+  297  ls
+  298  rm redis.yaml
+  299  ls
+  300  ls -ls | grep db
+  301  cd
+  302  sudo kubectl apply -f ./kubernetes/
+  303  cd kubernetes/
+  304  ls -ls
+  305  cd
+  306  sudo kubectl apply -f ./kubernetes/
+  307  sudo kubectl get pods
+  308  sudo kubectl get deploy
+  309  sudo kubectl get pods
+  310  sudo kubectl delete deploy vote
+  311  sudo kubectl delete deploy result
+  312  sudo kubectl delete deploy vorker
+  313  sudo kubectl delete deploy worker
+  314  sudo kubectl apply -f ./kubernetes/
+  315  sudo kubectl get pods
+  316  sudo kubectl logs deploy vote
+  317  sudo kubectl get pods
+  318  sudo kubectl logs deploy vote-768988595c-cvqth
+  319  sudo kubectl logs vote-768988595c-cvqth
+  320  sudo kubectl get pods
+  321  sudo kubectl exec -it vote -- bash
+  322  sudo kubectl exec -it vote-768988595c-cvqth -- bash
+  323  history
+  324  sudo vim  /etc/clustershell/groups.d/local.cfg
+  325  history | grep spray
+  326  sudo -i
+  327  history > userhistory.txt

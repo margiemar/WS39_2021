@@ -1,0 +1,6 @@
+yum install -y nfs-utils
+systemctl enable --now nfs-server
+mkdir -p /srv/nfs/k8s
+/srv/nfs/k8s *(rw,sync,no_subtree_check,no_root_squash,no_all_squash,insecure)
+exportfs -rav
+clush -g all yum install -y nfs-utils

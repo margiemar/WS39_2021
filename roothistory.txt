@@ -1,0 +1,118 @@
+    1  apt update
+    2  apt -y install open-vm-tools-desktop
+    3  reboot 
+    4  hystory
+    5  history
+    6  exit
+    7  vim /etc/systemd/timesyncd.conf
+    8  realm discover
+    9  realm join ht2021.local
+   10  realm list
+   11  pam-auth-update --enable mkhomedir
+   12  reboot
+   13  exit
+   14  git clone https://github.com/kubernetes-sigs/kubespray
+   15  cd kubespray/
+   16  ls
+   17  apt install -y python3 python3-pip python3-venv
+   18  python3 -m venv .venv
+   19  source .venv/bin/activate
+   20  pip3 iquirements.txt
+   21  cp -rfp inventory/sample inventory/mycluster
+   22  declare -a IPS=(172.30.1.21 172.30.1.22 172.30.23)
+   23  CONFIG_FILE=inventory/mycluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
+   24  pip3 install -r requirements.txt
+   25  cp -rfp inventory/sample inventory/mycluster
+   26  declare -a IPS=(172.30.1.21 172.30.1.22 172.30.23)
+   27  CONFIG_FILE=inventory/mycluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
+   28  less inventory/mycluster/group_vars/all/all.yml
+   29  vim inventory/mycluster/hosts.yaml
+   30  ansible-playbook -i inventory/mycluster/hosts.yaml --user=root cluster.yml
+   31  ansible-playbook -i inventory/mycluster/hosts.yaml --user=root cluster.yml -vvv ==limit k8s3
+   32  ansible-playbook -i inventory/mycluster/hosts.yaml --user=root cluster.yml -vvv --limit=k8s3
+   33  vim inventory/mycluster/hosts.yaml
+   34  ansible-playbook -i inventory/mycluster/hosts.yaml --user=root cluster.yml
+   35  cd
+   36  exit
+   37  ssh 172.30.1.21
+   38  apt install isc-dhcp-server
+   39  vim /etc/default/isc-dhcp-server 
+   40  cat  inventory/mycluster/hosts.yaml
+   41  cat /etc/dhcp/dhcpd.conf
+   42  systemctl status isc-dhcp-server
+   43  firewall-cmd --zone=public --list-all
+   44  kubectl get nodes
+   45  snap install kubectl
+   46  ssh-keygen
+   47  ssh-copy-id root@172.30.1.21
+   48  ssh-copy-id root@172.30.1.22
+   49  ssh-copy-id root@172.30.1.23
+   50  clush -g all nmcli connection modify ens192 ipv4.dns 172.30.0.1
+   51  clush -g all nmcli connection show ens192
+   52  clush -g all nmcli connection modify ens192 ethtool.feature-tx off
+   53  clush -g all nmcli connection modify ens192 ipv4.dns 172.30.0.1
+   54  clush -g all nmcli connection show ens192 | grep ipv4.dns
+   55  clush -g all nmcli connection modify ens192 ethtool.feature-tx off
+   56  clush -g all nmcli connection show ens192 | grep ethtool
+   57  clush -g all nmcli connection up ens192
+   58  clush -g all systemctl disable --now firewalld.service
+   59  cd 
+   60  sudo -i
+   61  scp -r root@172.30.1.21:/root/.kube ~/
+   62  ls -lsa
+   63  vim .kube/config 
+   64  curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+   65  chmod +x ./kubectl
+   66  sudo mv ./kubectl /usr/local/bin/kubectl
+   67  kubectl version --client
+   68  ls
+   69  exit
+   70  kubectl completion bash > /etc/bash_completion.d/kubectl
+   71  exit
+   72  clush -g all mkdir /opt/dir
+   73  cd kubespray/
+   74  cd
+   75  exit
+   76  history | grep spray
+   77  history
+   78  history > /home/user/roothistory.txt
+   
+   
+   
+root@DEV2:~/kubespray# cat inventory/mycluster/hosts.yaml
+all:
+  hosts:
+    k8s1:
+      ansible_host: 172.30.1.21
+      ip: 172.30.1.21
+      access_ip: 172.30.1.21
+    k8s2:
+      ansible_host: 172.30.1.22
+      ip: 172.30.1.22
+      access_ip: 172.30.1.22
+    k8s3:
+      ansible_host: 172.30.1.23
+      ip: 172.30.1.23
+      access_ip: 172.30.1.23
+  children:
+    kube_control_plane:
+      hosts:
+        k8s1:
+        k8s2:
+    kube_node:
+      hosts:
+        k8s1:
+        k8s2:
+        k8s3:
+    etcd:
+      hosts:
+        k8s1:
+        k8s2:
+        k8s3:
+    k8s_cluster:
+      children:
+        kube_control_plane:
+        kube_node:
+    calico_rr:
+      hosts: {}
+root@DEV2:~/kubespray#

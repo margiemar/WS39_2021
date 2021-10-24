@@ -1,0 +1,8 @@
+Kubernetes
+https://github.com/Slurmio/school-dev-k8s
+
+
+voting-app
+https://github.com/dockersamples/example-voting-app
+https://github.com/dockersamples/example-voting-app/blob/master/docker-compose.yml
+

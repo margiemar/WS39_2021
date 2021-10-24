@@ -1,0 +1,66 @@
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "3.5.0"
+    }
+  }
+}
+
+provider "google" {
+  credentials = file("/home/margo/terraform/terraform-329814-df7c5bac63fb.json")
+  project = "terraform-329814"
+  region  = "us-central1"
+  zone    = "us-central1-c"
+}
+
+#resource "google_compute_network" "vpc_network" {
+#  name = "terraform-network"
+#}
+
+resource "google_compute_instance" "my_comp" {
+  name         = "my-comp"
+  machine_type = "e2-small"
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-9"
+      #image = "centos-7-v20210420"
+      #image = "ubuntu-2004-focal-v20200720"
+    }
+  }
+  network_interface {       
+    network = "default"
+    access_config {
+    }
+  }
+}
+
+#  network_interface {
+#    network = google_compute_network.vpc_network.name
+#    access_config {
+#    }
+#  }
+#}
+
+resource "google_compute_firewall" "firewall_terra" {
+  name = "terra-fw"
+  direction = "INGRESS"
+  source_ranges = ["0.0.0.0/0"]
+  network = "default"
+  allow {
+    protocol = "tcp"
+    ports    = ["22", "80", "443"]
+  }
+  allow {
+    protocol = "udp"
+    ports    = ["500", "4500"]
+  }
+
+  allow {
+    protocol = "icmp"
+  }
+  allow {
+    protocol = "esp"
+  }
+}

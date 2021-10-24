@@ -1,0 +1,134 @@
+WB -C
+
+КОНТРОЛЛЕР ДОМЕНА
+
+ИЗМЕНЕНИЕ ИМЕНИ
+
+Rename-Computer -NewName AD
+
+СЕТЬ
+
+Get-NetAdapter
+New-NetIPAddress -InterfaceIndex 4 -IPAddress 172.30.0.1 -PrefixLength 24 -DefaultGateway 172.30.0.254
+
+или
+$GetIndex = Get-NetAdapter 
+New-NetIPAddress -InterfaceIndex $GetIndex.ifIndex -IPAddress 172.30.0.2 -PrefixLength 24 -DefaultGateway 172.30.0.254
+
+DNS НА ИНТЕРФЕЙСЕ
+
+Добавление DNS серверов (виртуальная машина AD будет являться корневым контролерам домена, а также DNS сервером)
+
+Set-DnsClientServerAddress -InterfaceIndex 4 -ServerAddresses ("172.30.0.1","8.8.8.8")
+
+NTP
+В случае необходимости команда изменения времени (после установки контролера домена автоматически будет настроен сервер времени для всех клиентов внутри домена)
+
+Set-date -date "01/10/2021 9:38"
+
+Set-TimeZone -Id "Russian Standard Time" - применять только на кажой машине.
+
+ICMP
+Set-NetFirewallRule -DisplayGroup "File And Printer Sharing" -Enabled True -Profile Any
+
+REBOOT
+Restart-Computer
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+УСТАНОВКА КОНТРОЛЛЕРА ДОМЕНА
+
+Установка роли Active directory и необходимых компонентов управления
+Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
+restart-computer
+
+Создание домена ht2021.local и установка DNS сервера
+Install-ADDSForest -DomainName "ht2021.local" -InstallDNS
+
+************************************************
+НАСТРОЙКА DNS-СЕРВЕРА
+
+Добавление обратной зоны просмотра на DNS сервере
+Add-DnsServerPrimaryZone -NetworkId 172.30.0.0/24 -ReplicationScope Domain
+
+В прямой зоне DNS находится запись ad.ht2021.local (добавим в обратную зону)
+Add-DNSServerResourceRecordPTR -ZoneName 0.30.172.in-addr.arpa -PTRDomainName ad.ht2021.local -Name 1
+
+Создание записи типа A для приложения в прямой и обратной зоне DNS
+Add-DnsServerResourceRecordA -Name "lorrylogapi" -ZoneName "ht2021.local" -AllowUpdateAny -IPv4Address "172.30.0.3" -CreatePtr 
+
+В графике потребовался рестарт.
+
+************************************************
+УСТАНОВКА И НАСТРОЙКА DHCP-СЕРВЕРА НА AD.
+
+Установка роли DHCP и необходимых компонентов управления
+Install-WindowsFeature -Name DHCP -IncludeManagementTools
+
+После установки необходимо Авторизовать DHCP сервер в Active Directory (укажите DNS имя сервера и IP адрес, который будет использоваться DHCP клиентами)
+Add-DhcpServerInDC -DnsName ad.ht2021.local -IPAddress 172.30.0.1
+
+Чтобы Server Manager перестал показывать уведомление о том, что DHCP роль требует настройки, выполните команду
+Set-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\ServerManager\Roles\12 -Name ConfigurationState -Value 2
+
+Перезапустите службу DHCPServer:
+Restart-Service -Name DHCPServer -Force
+
+Создание DHCP пула для выдачи адресов и активация
+Add-DhcpServerv4Scope -Name DHCPHT -StartRange 172.30.0.101 -EndRange 172.30.0.110 -SubnetMask 255.255.255.0 -State Active
+
+Настройка дополнительных опций 
+DNS-серверы
+Set-DhcpServerv4OptionValue -ScopeId 172.30.0.0 -OptionId 6 -Value "172.30.0.1","8.8.8.8"
+
+GW
+Set-DhcpServerv4OptionValue -ScopeId 172.30.0.0 -OptionId 3 -Value "172.30.0.254"
+
+Суффикс
+Set-DhcpServerv4OptionValue -ScopeId 172.30.0.0 -OptionId 15 -Value "ht2021.local"
+
+
+********************************************************
+НАСТРОЙКА ЭЛЕМЕНТОВ ACTIVE-DIRECTORY
+
+Создание подразделения (OU)
+New-ADOrganizationalUnit -Name "OUBD" -Path "DC=ht2021, DC=local"
+
+Создание группы безопасности
+New-ADGroup -Name "BD" -Path "OU=OUBD, DC=ht2021, DC=local" -GroupScope Global -SamAccountName BD
+
+Создание пользователя
+New-ADUser -Name lorries -Enabled $true -Path 'OU=OUBD,DC=ht2021, DC=local' -AccountPassword (ConvertTo-SecureString -String 'Pa$$w0rd' -AsPlainText -Force) -UserPrincipalName lorries@ht2021.local -PasswordNeverExpires $true 
+
+Добавление пользователя в группу безопасности
+Add-ADGroupMember -Identity BD -Members lorries
+
+
+ГРУППОВАЯ ПОЛИТИКА - ПОЛЬЗОВАТЕЛЬ - АДМИН
+Через графику.
+Для запуска приложения и доступу к базе данных пользователь должен обладать правами доступа.
+В Server Manager во вкладке Tools переходим в group policy management Создаем новую GPO задаем ей имя - localadmin.
+Переходим в редактирование затем в Computer Configuration –> Preferences –> Control Panel Settings –> Local Users and Groups далее New -> Local Group.
+В group name выбираем из выпадающего списка Administrators (Built-in) далее на add.
+Выбираем группу безопасности BD. Проверка: в Server Manager во вкладке Tools переходим в Active directory users and computers далее в OU.
+
+
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+**************************************************************************************************
+НЕ КОНТРОЛЛЕР ДОМЕНА
+Имя, сеть (если статика), DNS на интерфейсе - те же команды.
+
+ПРИСОЕДИНЕНИЕ К ДОМЕНУ
+Add-Computer -DomainName "ht2021.local"
+Вводим учетную запись администратора контроллера домена.
+Restart-Computer
+
+ПРИСОЕДИНЕНИЕ К ДОМЕНУ С DHCP
+Add-Computer -NewName DEV1 -DomainName "ht2021.local"
+
+Локально на firewall
+Для подключения к базе данных удаленно необходимо разрешить правила в межсетевом экране Правило TCP на порт 1433
+New-NetFirewallRule -DisplayName "SQLServer default instance" -Direction Inbound -LocalPort 1433 -Protocol TCP -Action Allow
+New-NetFirewallRule -DisplayName "SQLServer Browser service" -Direction Inbound -LocalPort 1434 -Protocol UDP -Action Allow
+

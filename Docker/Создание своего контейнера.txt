@@ -1,0 +1,134 @@
+Docker-compose
+https://github.com/dockersamples/example-voting-app/blob/master/docker-compose.yml
+
+Docker compose installation
+
+curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+***********************************************************
+
+Установка docker
+
+Установка на ubuntu
+
+sudo apt-get update
+sudo apt-get install     apt-transport-https     ca-certificates     curl     gnupg     lsb-release
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo   "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+docker run hello-world
+sudo docker run hello-world
+docker ps
+sudo usermod -aG docker ${USER}  
+*********************************************
+
+Скачать приложение
+
+cd ~
+git clone https://github.com/janakiramm/todo-app.git
+
+**********************************************
+requirements.txt
+Flask
+Redis
+gunicorn
+
+**********************************************
+Теперь пора собрать образ на основе Dockerfile. Используйте флаг –t, чтобы добавить имя реестра, имя образа и опциональный тег.
+
+docker build -t 274154979/todo-web .
+sudo docker run -it -p 5000:5000 <image id>
+
+Запушить на docker.hub:
+docker login
+
+docker build vote/ -t 274154979/ht-vote:latest
+docker tag ht-vote:latest <YOUR_NICKNAME>/ht-vote:latest
+docker push <YOUR_NICKNAME>/ht-vote:latest
+
+docker exec -it  /bin/bash
+
+Запуск
+
+docker build . -t ht-vote
+docker run -d --name vote --restart always --network backend -p 3000:80 ht-vote
+docker logs <CONTAINER_NAME>
+
+
+*************************************************
+
+FROM ubuntu
+RUN apt update
+RUN apt-get install curl python3 python3-pip -y
+RUN pip3 install Flask
+RUN mkdir ./dir && cd ./dir
+WORKDIR  /dir
+COPY requirements.txt /tmp/
+RUN pip3 install --requirement /tmp/requirements.txt
+COPY . /app
+RUN make /app
+CMD python3 ./app/app.py
+CMD ["postgres"]
+
+
+
+****************
+FROM python:3.6-stretch
+FROM python:3.6-stretch
+MAINTAINER Tina Bu <tina.hongbu@gmail.com>
+
+# устанавливаем параметры сборки
+RUN apt-get update && \
+	apt-get install -y gcc make apt-transport-https ca-certificates build-essential
+
+# проверяем окружение python 
+RUN python3 --version
+RUN pip3 --version
+
+# задаем рабочую директорию для контейнера 
+WORKDIR  /usr/src/<app-name>
+
+# устанавливаем зависимости python
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# копируем все файлы из корня проекта в рабочую директорию 
+COPY src/ /src/
+RUN ls -la /src/*
+
+# запускаем приложение Python 
+CMD ["python3", "/src/main.py"]
+
+
+******************************
+
+
+dockerfile.yml
+FROM python:3.9-slim
+
+# add curl for healthcheck
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set the application directory
+WORKDIR /app
+
+# Install our requirements.txt
+COPY requirements.txt /app/requirements.txt
+RUN pip install -r requirements.txt
+
+# Copy our code from the current folder to /app inside the container
+COPY . .
+
+# Make port 80 available for links and/or publish
+EXPOSE 80
+
+# Define our command to be run when launching the container
+CMD ["gunicorn", "app:app", "-b", "0.0.0.0:80", "--log-file", "-", "--access-logfile", "-", "--workers", "4", "--keep-alive", "0"]
+
+
+
